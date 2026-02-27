@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixelGrid Studio</title>
+    <title>PixelGrid Studio | Premium Design</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
@@ -15,6 +15,8 @@
             --text-dark: #0f172a; 
             --text-muted: #64748b; 
             --border-light: #e2e8f0;
+            --yt-red: #ff0000;
+            --wa-green: #25D366;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
@@ -28,121 +30,127 @@
             overflow-x: hidden;
         }
 
-        /* --- প্রফেশনাল নেভিগেশন ও লোগো --- */
         nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; /* নেভিগেশনের মার্জিন কমানো হলো */
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-light);
+            backdrop-filter: blur(10px); position: fixed; width: 100%;
+            top: 0; z-index: 1000; border-bottom: 1px solid var(--border-light);
             box-shadow: 0 2px 15px rgba(0,0,0,0.03);
         }
 
-        /* সুন্দর লোগো ডিজাইন */
-        .logo { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            cursor: pointer; 
-        }
-        
+        .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .logo-icon {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            width: 42px; height: 42px;
-            display: flex; justify-content: center; align-items: center;
-            border-radius: 12px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.6rem; 
-            font-weight: 800;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            color: white; width: 42px; height: 42px; display: flex; justify-content: center; 
+            align-items: center; border-radius: 12px; font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem; font-weight: 800;
         }
+        .logo-text { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-dark); letter-spacing: -0.5px; }
+        .logo-text span { color: var(--primary); }
 
-        .logo-text { 
-            font-family: 'Outfit', sans-serif;
-            font-size: 1.5rem; 
-            font-weight: 800; 
-            color: var(--text-dark); 
-            letter-spacing: -0.5px;
-        }
-        .logo-text span { color: var(--primary); } /* ডট কালার */
-
-        /* --- হ্যামবার্গার মেনু আইকন --- */
-        .hamburger {
-            display: flex; flex-direction: column; gap: 6px; 
-            cursor: pointer; z-index: 1001; /* সাইডবারের ওপরে থাকবে */
-        }
-        .hamburger span {
-            width: 28px; height: 3px; 
-            background: var(--text-dark);
-            border-radius: 3px; 
-            transition: all 0.3s ease;
-        }
-        
-        /* হ্যামবার্গার থেকে ক্রস (X) অ্যানিমেশন */
+        .hamburger { display: flex; flex-direction: column; gap: 6px; cursor: pointer; z-index: 1001; }
+        .hamburger span { width: 28px; height: 3px; background: var(--text-dark); border-radius: 3px; transition: all 0.3s ease; }
         .hamburger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); background: var(--primary); }
         .hamburger.active span:nth-child(2) { opacity: 0; }
         .hamburger.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); background: var(--primary); }
 
-        /* --- সাইডবার মেনু (ডানপাশ থেকে আসবে) --- */
         .sidebar {
-            position: fixed; top: 0; right: -300px; 
-            width: 300px; height: 100vh;
-            background: var(--bg-card); 
-            box-shadow: -5px 0 30px rgba(0,0,0,0.05);
-            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            z-index: 999; padding-top: 100px;
-            border-left: 1px solid var(--border-light);
+            position: fixed; top: 0; right: -300px; width: 300px; height: 100vh;
+            background: var(--bg-card); box-shadow: -5px 0 30px rgba(0,0,0,0.05);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 999; 
+            padding-top: 100px; border-left: 1px solid var(--border-light);
         }
         .sidebar.active { right: 0; }
 
         .nav-links { list-style: none; padding: 0 40px; }
         .nav-links li { margin-bottom: 25px; }
         .nav-links a {
-            text-decoration: none; font-size: 1.2rem; color: var(--text-dark);
-            font-weight: 600; transition: color 0.3s;
-            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; font-size: 1.1rem; color: var(--text-dark);
+            font-weight: 600; transition: color 0.3s; display: flex; align-items: center; gap: 10px;
         }
         .nav-links a:hover { color: var(--primary); padding-left: 5px; }
 
-        /* --- সেকশন স্টাইল --- */
-        section { padding: 100px 10%; min-height: 80vh; }
+        /* --- দুই সাইডের মার্জিন কমানো হয়েছে (10% থেকে 3% করা হয়েছে) --- */
+        section { padding: 100px 3%; min-height: auto; max-width: 1600px; margin: 0 auto; }
         
-        .hero { display: flex; align-items: center; justify-content: center; text-align: center; margin-top: 40px; }
+        .hero { display: flex; align-items: center; justify-content: center; text-align: center; margin-top: 60px; padding-bottom: 60px; }
         .hero-text h3 { color: var(--primary); font-size: 1rem; margin-bottom: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;}
         .hero-text h1 { font-family: 'Outfit', sans-serif; font-size: 3.5rem; line-height: 1.2; margin-bottom: 20px; font-weight: 800; }
         .hero-text p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 35px; max-width: 600px; margin-left: auto; margin-right: auto;}
 
+        .btn-group { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .btn {
-            padding: 14px 35px; background: var(--primary); color: #fff;
+            padding: 14px 30px; background: var(--primary); color: #fff;
             font-weight: 600; border: none; border-radius: 8px; cursor: pointer;
-            transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3); text-decoration: none;
+            transition: all 0.3s ease; text-decoration: none;
         }
-        .btn:hover { background: #4338ca; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4); }
-
-        /* --- পোর্টফলিও গ্যালারি --- */
-        .section-title { text-align: center; font-size: 2rem; margin-bottom: 50px; font-family: 'Outfit', sans-serif; font-weight: 800; }
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
+        .btn:hover { background: #4338ca; transform: translateY(-2px); }
         
-        .image-card {
-            position: relative; background: var(--bg-card); border-radius: 12px; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.04); transition: all 0.3s ease; border: 1px solid var(--border-light);
+        .yt-btn {
+            padding: 14px 30px; background: var(--yt-red); color: #fff;
+            font-weight: 600; border: none; border-radius: 8px; cursor: pointer;
+            transition: all 0.3s ease; text-decoration: none; display: flex; align-items: center; gap: 8px;
         }
-        .image-card:hover { transform: translateY(-8px); box-shadow: 0 20px 35px rgba(0,0,0,0.08); }
-        
-        canvas { width: 100%; display: block; pointer-events: none; border-bottom: 1px solid var(--border-light); }
-        .guard-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: crosshair; }
-        .info { padding: 20px; text-align: center; font-size: 1.05rem; font-weight: 700; }
+        .yt-btn:hover { background: #cc0000; transform: translateY(-2px); }
+        .yt-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
-        /* --- অ্যাবাউট ও ফুটার --- */
-        .about-box { background: var(--bg-card); padding: 40px; border-radius: 16px; text-align: center; border: 1px solid var(--border-light); }
-        footer { text-align: center; padding: 30px; color: var(--text-muted); background: var(--bg-card); border-top: 1px solid var(--border-light); }
+        .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 40px; font-family: 'Outfit', sans-serif; font-weight: 800; }
+        
+        /* --- গ্যালারির ইমেজ আগের চেয়ে অনেক বড় করা হয়েছে (minmax 360px) --- */
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 18px; }
+        
+        .image-card { transition: all 0.3s ease; position: relative; }
+        
+        .image-wrapper { 
+            position: relative; width: 100%; padding-top: 56.25%; 
+            overflow: hidden; background: #f1f5f9; border-radius: 12px;
+        }
+        .image-wrapper img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; pointer-events: none; transition: transform 0.4s ease;
+        }
+        .image-wrapper:hover img { transform: scale(1.03); } 
+        .guard-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
+        
+        /* --- WhatsApp Get Image বাটন (ডিফল্টভাবে লুকানো) --- */
+        .get-wa-btn {
+            position: absolute;
+            bottom: -50px; /* একদম নিচে লুকিয়ে রাখা হয়েছে */
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--wa-green);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 20;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            opacity: 0;
+            pointer-events: none; /* লুকানো অবস্থায় ক্লিক করা যাবে না */
+        }
+        
+        /* মাউস হোভার করলে বা মোবাইলে ট্যাপ করলে ভেসে উঠবে */
+        .image-wrapper:hover .get-wa-btn,
+        .image-wrapper:active .get-wa-btn {
+            bottom: 20px;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .get-wa-btn:hover { background: #1ebe57; color: white; transform: translateX(-50%) scale(1.05); }
+        .get-wa-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        .info { padding: 12px 5px 20px; text-align: left; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+
+        .about-box { background: var(--bg-card); padding: 40px; border-radius: 16px; text-align: center; border: 1px solid var(--border-light); max-width: 700px; margin: 0 auto; }
+        footer { text-align: center; padding: 30px; color: var(--text-muted); background: var(--bg-card); border-top: 1px solid var(--border-light); margin-top: 50px;}
 
         #alert-box {
             position: fixed; top: 90px; left: 50%; transform: translateX(-50%);
@@ -151,7 +159,11 @@
         }
 
         @media print { body { display: none !important; } }
-        @media (max-width: 768px) { .hero-text h1 { font-size: 2.5rem; } }
+        @media (max-width: 768px) { 
+            .hero-text h1 { font-size: 2.5rem; } 
+            section { padding: 80px 5%; } /* মোবাইলের জন্য মার্জিন */
+            .gallery { grid-template-columns: 1fr; } /* মোবাইলে ছবি ফুল স্ক্রিন দেখাবে */
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -161,20 +173,18 @@
             <div class="logo-icon">P</div>
             <div class="logo-text">PixelGrid<span>.</span></div>
         </div>
-        
         <div class="hamburger" id="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
+            <span></span><span></span><span></span>
         </div>
     </nav>
 
     <div class="sidebar" id="sidebar">
         <ul class="nav-links">
-            <li><a href="#home">🏠 Home</a></li>
-            <li><a href="#portfolio">🎨 My Portfolio</a></li>
-            <li><a href="#about">📞 Contact Info</a></li>
-            <li><a href="#" onclick="alert('ড্যাশবোর্ড প্রাইভেট রাখা হয়েছে।')">⚙️ Admin Login</a></li>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#portfolio">Our Design</a></li>
+            <li><a href="#about">About Me</a></li>
+            <li><a href="#" onclick="alert('Privacy Policy page coming soon!')">Privacy Policy</a></li>
+            <li><a href="#" onclick="alert('Terms & Conditions page coming soon!')">Terms & Conditions</a></li>
         </ul>
     </div>
 
@@ -182,35 +192,44 @@
 
     <section id="home" class="hero">
         <div class="hero-text">
-            <h3>Creative Design Agency</h3>
-            <h1>Crafting Visuals That Speak</h1>
-            <p>আমি একজন প্রফেশনাল গ্রাফিক ডিজাইনার। আমার এক্সক্লুসিভ থাম্বনেইল, ব্যানার এবং UI ডিজাইনগুলো এখানে সুন্দরভাবে সাজানো আছে।</p>
-            <a href="#portfolio" class="btn">View My Work</a>
+            <h3>Premium Design Agency</h3>
+            <h1>PixelGrid Premium Design Studio</h1>
+            <p>PixelGrid একটি ডিজিটাল গ্রাফিক ডিজাইন স্টুডিও। এক্সক্লুসিভ থাম্বনেইল, ব্যানার এবং UI ডিজাইনগুলো এখানে সুন্দরভাবে সাজানো আছে।</p>
+            
+            <div class="btn-group">
+                <a href="#portfolio" class="btn">View My Work</a>
+                <a href="https://youtube.com/@kawsarharelive" target="_blank" class="yt-btn">
+                    <svg viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                    Subscribe Now
+                </a>
+            </div>
         </div>
     </section>
 
     <section id="portfolio" style="background: var(--bg-body);">
         <h2 class="section-title">Featured Projects</h2>
-        <div class="gallery" id="image-gallery">
-            </div>
+        <div class="gallery" id="image-gallery"></div>
     </section>
 
     <section id="about">
-        <h2 class="section-title">Get In Touch</h2>
+        <h2 class="section-title">About & Contact</h2>
         <div class="about-box">
-            <h3 style="margin-bottom: 15px; font-size: 1.5rem;">PixelGrid Studio</h3>
-            <p style="color: var(--text-muted); margin-bottom: 20px;">যেকোনো প্রফেশনাল ডিজাইন সার্ভিস বা কোলাবোরেশনের জন্য যোগাযোগ করুন।</p>
-            <a href="mailto:yourmail@gmail.com" class="btn" style="background: var(--text-dark);">Email Me</a>
+            <h3 style="margin-bottom: 15px; font-size: 1.8rem; font-family: 'Outfit', sans-serif;">PixelGrid Studio</h3>
+            <p style="color: var(--text-muted); margin-bottom: 25px; line-height: 1.8;">আমরা দীর্ঘ দিন ধরে ইউটিউব থাম্বনেইল, ব্যানার এবং ব্র্যান্ডিং লোগো নিয়ে কাজ করছি। আপনার প্রজেক্টকে আরও প্রফেশনাল লুক দিতে আমাদের সাথে যোগাযোগ করতে পারেন।</p>
+            <a href="mailto:skkawsar202120@gmail.com" class="btn" style="background: var(--text-dark);">Send me an Email</a>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 PixelGrid Studio.</p>
+        <p>&copy; 2026 PixelGrid Studio. All Rights Reserved.</p>
+        <div style="margin-top: 10px; font-size: 0.9rem;">
+            <a href="#" style="color: var(--text-muted); text-decoration: none; margin: 0 10px;">Privacy Policy</a> | 
+            <a href="#" style="color: var(--text-muted); text-decoration: none; margin: 0 10px;">Terms of Service</a>
+        </div>
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    
     <script src="script.js"></script>
 </body>
 </html>

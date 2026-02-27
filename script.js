@@ -1,5 +1,5 @@
 // ==========================================
-// 1. UI & Navigation Logic (Hamburger Menu)
+// 1. UI & Navigation Logic 
 // ==========================================
 const hamburger = document.getElementById('hamburger');
 const sidebar = document.getElementById('sidebar');
@@ -27,8 +27,7 @@ const firebaseConfig = {
   projectId: "pixel-gird",
   storageBucket: "pixel-gird.firebasestorage.app",
   messagingSenderId: "16267197833",
-  appId: "1:16267197833:web:8e7ff71df918ad803ab558",
-  measurementId: "G-58SMHCEC74"
+  appId: "1:16267197833:web:8e7ff71df918ad803ab558"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -39,64 +38,50 @@ if (document.getElementById('image-gallery')) {
         const gallery = document.getElementById('image-gallery');
         gallery.innerHTML = ""; 
         
+        const items = [];
         snapshot.forEach((childSnapshot) => {
-            const data = childSnapshot.val();
-            renderWatermarkedImage(data);
+            items.push(childSnapshot.val());
+        });
+        
+        items.reverse().forEach((data) => {
+            renderImage(data);
         });
     });
 }
 
 // ==========================================
-// 3. Canvas Watermark & Render Engine (UPDATED)
+// 3. Fast Image Render & WhatsApp Request
 // ==========================================
-function renderWatermarkedImage(item) {
+function renderImage(item) {
     const gallery = document.getElementById('image-gallery');
     const card = document.createElement('div');
     card.className = 'image-card';
 
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
+    // ইমেজ সোর্স (ImgBB বা ড্রাইভ)
+    const imageSrc = item.imageUrl || 
+                    (item.driveId && item.driveId.startsWith('http') ? item.driveId : `https://drive.google.com/thumbnail?id=${item.driveId}&sz=w1000`);
 
-    img.crossOrigin = "anonymous";
+    // 🔴 আপনার WhatsApp নাম্বারটি এখানে বসান (দেশের কোড সহ, + ছাড়া)
+    const waNumber = "8801960193514"; 
     
-    // 🔴 ফিক্স: গুগল ড্রাইভের CORS ব্লক এড়াতে Image Proxy ব্যবহার করা হলো
-    img.src = `https://wsrv.nl/?url=https://drive.google.com/uc?id=${item.driveId}`;
+    // অটোমেটিক মেসেজ (টাইটেল সহ)
+    const waMessage = encodeURIComponent(`হ্যালো, আমি আপনাদের ওয়েবসাইট PixelGird থেকে "${item.title}" ডিজাইনটি সম্পর্কে জানতে চাই।`);
+    const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
 
-    img.onload = function() {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-
-        // ওয়াটারমার্ক ডিজাইন
-        ctx.font = `bold ${img.width / 15}px 'Plus Jakarta Sans', Arial`;
-        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-        ctx.textAlign = "center";
-        
-        ctx.save();
-        ctx.translate(canvas.width/2, canvas.height/2);
-        ctx.rotate(-Math.PI / 4);
-        ctx.fillText("PIXELGRID STUDIO", 0, 0); 
-        ctx.restore();
-    };
-
-    // যদি ইমেজ লিংক ভুল হয় বা পাবলিক না থাকে
-    img.onerror = function() {
-        canvas.width = 600;
-        canvas.height = 400;
-        ctx.fillStyle = "#f1f5f9";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#64748b";
-        ctx.font = "bold 20px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText("⚠️ Image Load Error", canvas.width/2, canvas.height/2);
-        ctx.font = "14px Arial";
-        ctx.fillText("গুগল ড্রাইভ লিংকটি 'Anyone with link' করা নেই", canvas.width/2, canvas.height/2 + 30);
-    };
-
-    card.innerHTML = `<div class="guard-overlay"></div>`;
-    card.appendChild(canvas);
-    card.innerHTML += `<div class="info">${item.title}</div>`;
+    // ক্যানভাস মুক্ত ক্লিন ইমেজ এবং WhatsApp বাটন
+    card.innerHTML = `
+        <div class="image-wrapper">
+            <div class="guard-overlay" oncontextmenu="return false;"></div>
+            <img src="${imageSrc}" alt="${item.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/800x450?text=Image+Not+Found'">
+            
+            <a href="${waLink}" target="_blank" class="get-wa-btn">
+                <svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824z"/></svg>
+                Get Image
+            </a>
+        </div>
+        <div class="info">${item.title}</div>
+    `;
+    
     gallery.appendChild(card);
 }
 
@@ -119,7 +104,7 @@ document.onkeydown = (e) => {
 
 document.addEventListener('keyup', e => {
     if (e.key === 'PrintScreen') {
-        navigator.clipboard.writeText('Screenshot is strictly prohibited!');
+        navigator.clipboard.writeText('Screenshot disabled!');
         showSecurityAlert();
     }
 });
