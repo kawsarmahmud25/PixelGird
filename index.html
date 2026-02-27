@@ -33,7 +33,7 @@
 
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 5%; /* নেভিগেশনের মার্জিন কমানো হলো */
+            padding: 15px 5%; 
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px); position: fixed; width: 100%;
             top: 0; z-index: 1000; border-bottom: 1px solid var(--border-light);
@@ -72,7 +72,6 @@
         }
         .nav-links a:hover { color: var(--primary); padding-left: 5px; }
 
-        /* --- দুই সাইডের মার্জিন কমানো হয়েছে (10% থেকে 3% করা হয়েছে) --- */
         section { padding: 100px 3%; min-height: auto; max-width: 1600px; margin: 0 auto; }
         
         .hero { display: flex; align-items: center; justify-content: center; text-align: center; margin-top: 60px; padding-bottom: 60px; }
@@ -98,14 +97,15 @@
 
         .section-title { text-align: center; font-size: 2.2rem; margin-bottom: 40px; font-family: 'Outfit', sans-serif; font-weight: 800; }
         
-        /* --- গ্যালারির ইমেজ আগের চেয়ে অনেক বড় করা হয়েছে (minmax 360px) --- */
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 18px; }
+        /* --- কার্ড ভিউ রিমুভ করা হয়েছে --- */
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 25px; }
         
         .image-card { transition: all 0.3s ease; position: relative; }
         
         .image-wrapper { 
             position: relative; width: 100%; padding-top: 56.25%; 
             overflow: hidden; background: #f1f5f9; border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); /* ইমেজে হালকা শ্যাডো */
         }
         .image-wrapper img {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -114,10 +114,9 @@
         .image-wrapper:hover img { transform: scale(1.03); } 
         .guard-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; }
         
-        /* --- WhatsApp Get Image বাটন (ডিফল্টভাবে লুকানো) --- */
         .get-wa-btn {
             position: absolute;
-            bottom: -50px; /* একদম নিচে লুকিয়ে রাখা হয়েছে */
+            bottom: -50px; 
             left: 50%;
             transform: translateX(-50%);
             background: var(--wa-green);
@@ -134,10 +133,9 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
             opacity: 0;
-            pointer-events: none; /* লুকানো অবস্থায় ক্লিক করা যাবে না */
+            pointer-events: none; 
         }
         
-        /* মাউস হোভার করলে বা মোবাইলে ট্যাপ করলে ভেসে উঠবে */
         .image-wrapper:hover .get-wa-btn,
         .image-wrapper:active .get-wa-btn {
             bottom: 20px;
@@ -148,7 +146,38 @@
         .get-wa-btn:hover { background: #1ebe57; color: white; transform: translateX(-50%) scale(1.05); }
         .get-wa-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
-        .info { padding: 12px 5px 20px; text-align: left; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+        /* Description Title (প্যাডিং জিরো করা হয়েছে যাতে ইমেজের সমান থাকে) */
+        .info { padding: 15px 0 8px 0; text-align: left; font-size: 1.15rem; font-weight: 700; color: var(--text-dark); }
+
+        /* =========== Pro Features Tags Styling =========== */
+        .pro-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 0 18px 0;
+        }
+        .pro-features span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .pro-features span svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        /* Individual Premium Colors */
+        .tag-hq { color: #0284c7; background: #e0f2fe; border-color: #bae6fd; }
+        .tag-wm { color: #dc2626; background: #fee2e2; border-color: #fecaca; }
+        .tag-cz { color: #4f46e5; background: #e0e7ff; border-color: #c7d2fe; }
 
         .about-box { background: var(--bg-card); padding: 40px; border-radius: 16px; text-align: center; border: 1px solid var(--border-light); max-width: 700px; margin: 0 auto; }
         footer { text-align: center; padding: 30px; color: var(--text-muted); background: var(--bg-card); border-top: 1px solid var(--border-light); margin-top: 50px;}
@@ -162,8 +191,8 @@
         @media print { body { display: none !important; } }
         @media (max-width: 768px) { 
             .hero-text h1 { font-size: 2.5rem; } 
-            section { padding: 80px 5%; } /* মোবাইলের জন্য মার্জিন */
-            .gallery { grid-template-columns: 1fr; } /* মোবাইলে ছবি ফুল স্ক্রিন দেখাবে */
+            section { padding: 80px 5%; } 
+            .gallery { grid-template-columns: 1fr; } 
         }
     </style>
 </head>
