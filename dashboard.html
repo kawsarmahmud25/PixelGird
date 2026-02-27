@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | PixelGrid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f1f5f9;
+            --card-bg: #ffffff;
+            --primary: #4f46e5;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body { background-color: var(--bg-body); color: var(--text-dark); padding: 40px 20px; }
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 2rem; color: var(--primary); font-weight: 700; }
+        .header p { color: var(--text-muted); }
+
+        .dashboard-container {
+            max-width: 1000px; margin: 0 auto;
+            display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg); padding: 30px;
+            border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--border); height: fit-content;
+        }
+
+        .card h2 { font-size: 1.3rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+
+        /* --- ফর্ম ডিজাইন --- */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        input {
+            width: 100%; padding: 12px 15px; border: 1px solid var(--border);
+            border-radius: 8px; outline: none; transition: 0.3s; font-size: 1rem;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+
+        .btn-submit {
+            width: 100%; background: var(--primary); color: white;
+            padding: 14px; border: none; border-radius: 8px;
+            font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+        .btn-submit:hover { background: #4338ca; transform: translateY(-2px); }
+
+        /* --- মেসেজ স্টাইল --- */
+        #msg { text-align: center; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
+        .success { color: #10b981; }
+        .error { color: var(--danger); }
+
+        /* --- ম্যানেজ ডিজাইন লিস্ট --- */
+        .item-list { list-style: none; max-height: 400px; overflow-y: auto; padding-right: 10px; }
+        .item-list::-webkit-scrollbar { width: 6px; }
+        .item-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; background: var(--bg-body); margin-bottom: 10px;
+            border-radius: 8px; border: 1px solid var(--border);
+        }
+        .item-info strong { display: block; font-size: 1rem; color: var(--text-dark); }
+        .item-info span { font-size: 0.8rem; color: var(--text-muted); }
+
+        .btn-delete {
+            background: var(--danger); color: white; border: none;
+            padding: 8px 12px; border-radius: 6px; cursor: pointer;
+            font-size: 0.8rem; font-weight: 600; transition: 0.3s;
+        }
+        .btn-delete:hover { background: #dc2626; }
+
+        @media (max-width: 768px) {
+            .dashboard-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>PixelGrid Admin</h1>
+        <p>আপনার পোর্টফলিও ডিজাইন আপলোড এবং ম্যানেজ করুন</p>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="card">
+            <h2>☁️ Add New Design</h2>
+            <div class="form-group">
+                <label>Google Drive File ID</label>
+                <input type="text" id="imgId" placeholder="e.g. 1A2B3C4D5E6F7G8H9I">
+            </div>
+            <div class="form-group">
+                <label>Design Title</label>
+                <input type="text" id="imgTitle" placeholder="e.g. Free Fire Banner">
+            </div>
+            <button class="btn-submit" onclick="uploadToDatabase()">Publish to Portfolio</button>
+            <p id="msg"></p>
+        </div>
+
+        <div class="card">
+            <h2>📂 Manage Designs</h2>
+            <ul class="item-list" id="design-list">
+                <p style="text-align:center; color:#94a3b8; font-size:0.9rem; margin-top: 20px;">Loading data...</p>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    
+    <script>
+        // ==========================================
+        // 1. Firebase Configuration (এখানে আপনার কনফিগ বসান)
+        // ==========================================
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBavEYDKi2WyklJnOxL2icIuV0Qt-HQc7o",
+  authDomain: "pixel-gird.firebaseapp.com",
+  projectId: "pixel-gird",
+  storageBucket: "pixel-gird.firebasestorage.app",
+  messagingSenderId: "16267197833",
+  appId: "1:16267197833:web:8e7ff71df918ad803ab558",
+  measurementId: "G-58SMHCEC74"
+};
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const msgBox = document.getElementById('msg');
+
+        // ==========================================
+        // 2. Upload Data to Firebase
+        // ==========================================
+        function uploadToDatabase() {
+            const id = document.getElementById('imgId').value.trim();
+            const title = document.getElementById('imgTitle').value.trim();
+
+            if(id === "" || title === "") {
+                msgBox.innerText = "দয়া করে আইডি এবং টাইটেল দুটিই দিন!";
+                msgBox.className = "error";
+                return;
+            }
+
+            database.ref('portfolio/').push({
+                driveId: id,
+                title: title,
+                timestamp: new Date().getTime() // ডাটা সর্ট করার জন্য সময় যুক্ত করা হলো
+            }).then(() => {
+                msgBox.innerText = "✅ সফলভাবে পোর্টফলিওতে যোগ হয়েছে!";
+                msgBox.className = "success";
+                document.getElementById('imgId').value = "";
+                document.getElementById('imgTitle').value = "";
+                setTimeout(() => msgBox.innerText = "", 3000);
+            }).catch((error) => {
+                msgBox.innerText = "❌ আপলোড ব্যর্থ হয়েছে: " + error.message;
+                msgBox.className = "error";
+            });
+        }
+
+        // ==========================================
+        // 3. Fetch and Display Data (Realtime)
+        // ==========================================
+        const designList = document.getElementById('design-list');
+
+        database.ref('portfolio/').on('value', (snapshot) => {
+            designList.innerHTML = ""; // ক্লিয়ার করা
+            
+            if(!snapshot.exists()) {
+                designList.innerHTML = "<p style='text-align:center; color:#94a3b8; font-size:0.9rem; margin-top: 20px;'>কোনো ডিজাইন আপলোড করা হয়নি।</p>";
+                return;
+            }
+
+            snapshot.forEach((childSnapshot) => {
+                const key = childSnapshot.key;
+                const data = childSnapshot.val();
+
+                const li = document.createElement('li');
+                li.className = 'item';
+                li.innerHTML = `
+                    <div class="item-info">
+                        <strong>${data.title}</strong>
+                        <span>ID: ${data.driveId.substring(0, 10)}...</span>
+                    </div>
+                    <button class="btn-delete" onclick="deleteItem('${key}')">Delete</button>
+                `;
+                designList.prepend(li); // নতুন আপলোড করা ডিজাইন উপরে থাকবে
+            });
+        });
+
+        // ==========================================
+        // 4. Delete Data from Firebase
+        // ==========================================
+        function deleteItem(key) {
+            if(confirm("আপনি কি নিশ্চিত যে এই ডিজাইনটি ডিলিট করতে চান?")) {
+                database.ref('portfolio/' + key).remove()
+                .then(() => {
+                    alert("ডিজাইনটি ডিলিট করা হয়েছে।");
+                })
+                .catch((error) => {
+                    alert("ডিলিট করতে সমস্যা হয়েছে: " + error.message);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
