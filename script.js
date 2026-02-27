@@ -27,6 +27,7 @@ navLinks.forEach(link => {
 const firebaseConfig = {
   apiKey: "AIzaSyBavEYDKi2WyklJnOxL2icIuV0Qt-HQc7o",
   authDomain: "pixel-gird.firebaseapp.com",
+  databaseURL: "https://pixel-gird-default-rtdb.asia-southeast1.firebasedatabase.app", // এই নতুন লাইনটি যোগ করা হয়েছে
   projectId: "pixel-gird",
   storageBucket: "pixel-gird.firebasestorage.app",
   messagingSenderId: "16267197833",
